@@ -38,15 +38,7 @@ namespace H3MiniProjekt.DAL.Repositories
             if (book != null)
             {
                 _context.Book.Remove(book);
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-
-                    throw;
-                }
+                await _context.SaveChangesAsync();
             }
             return book;
         }
