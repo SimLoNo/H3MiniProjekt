@@ -31,7 +31,7 @@ namespace H3MiniProjekt.Api.Controllers
 
         // GET: api/Author
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Author>>> GetAllAuthors()
+        public async Task<ActionResult> GetAllAuthors()
         {
             try
             {
@@ -54,7 +54,7 @@ namespace H3MiniProjekt.Api.Controllers
 
         // GET: api/Author/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(int id)
+        public async Task<ActionResult> GetAuthor(int id)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace H3MiniProjekt.Api.Controllers
                 {
                     return NotFound();
                 }
-                return author;
+                return Ok(author);
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace H3MiniProjekt.Api.Controllers
         // POST: api/Author
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Author>> PostAuthor(Author author)
+        public async Task<ActionResult> PostAuthor(Author author)
         {
             try
             {

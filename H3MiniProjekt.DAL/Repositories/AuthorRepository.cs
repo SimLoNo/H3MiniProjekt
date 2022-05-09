@@ -36,7 +36,7 @@ namespace H3MiniProjekt.DAL.Repositories
 
         public async Task<Author> DeleteAuthor(int authorId)
         {
-            Author author = await _context.Author.FirstOrDefaultAsync(authorObj => authorObj.BookId == authorId);
+            Author author = await _context.Author.FirstOrDefaultAsync(authorObj => authorObj.AuthorId == authorId);
             if (author != null)
             {
                 _context.Author.Remove(author);

@@ -24,7 +24,7 @@ namespace H3MiniProjekt.Api.Controllers
 
         // GET: api/Book
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetAllBooks()
+        public async Task<ActionResult> GetAllBooks()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace H3MiniProjekt.Api.Controllers
 
         // GET: api/Book/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetBook(int id)
+        public async Task<ActionResult> GetBook(int id)
         {
             try
             {
@@ -95,13 +95,16 @@ namespace H3MiniProjekt.Api.Controllers
         // POST: api/Book
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book) // Spoerg Flemming omkring Post/create.
+        public async Task<ActionResult> PostBook(Book book) // Spoerg Flemming omkring Post/create.
         {
             try
             {
-                Book postedBook = await _repository.CreateBook(book);
-
-                return CreatedAtAction("GetBook", new { id = book.BookId }, book);
+                Book createdBook = await _repository.CreateBook(book);
+                if (createdBook == null)
+                {
+                    return NotFound();
+                }
+                return Ok(createdBook);
             }
             catch (Exception ex)
             {
