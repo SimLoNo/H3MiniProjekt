@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace H3MiniProjekt.Api
@@ -29,6 +30,18 @@ namespace H3MiniProjekt.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("kage",
+                builder =>
+                {
+                    builder.AllowAnyOrigin() // kan skrive port i stedet for
+                           .AllowAnyHeader()
+                           .AllowAnyMethod(); // kun get eller put mm.
+                });
+            });
+
             services.AddDbContext<AbContext>(
                 x => x.UseSqlServer(Configuration.GetConnectionString("Default")));
 
@@ -41,6 +54,9 @@ namespace H3MiniProjekt.Api
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddDbContext<AbContext>();
+
+            //services.AddControllers().AddJsonOptions(x =>
+            //x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +72,8 @@ namespace H3MiniProjekt.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("kage");
 
             app.UseAuthorization();
 
