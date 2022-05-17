@@ -14,5 +14,7 @@ namespace H3MiniProjekt.DAL.Database.Models
         public double WordCound { get; set; }
         public bool Binding { get; set; }
         public int ReleaseYear { get; set; }
+        public int AuthorId { get; set; }
+        public Author Author { get; set; }
     }
 }

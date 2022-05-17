@@ -54,7 +54,7 @@ namespace H3MiniProjekt.Api
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddDbContext<AbContext>();
-
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             //services.AddControllers().AddJsonOptions(x =>
             //x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
         }
