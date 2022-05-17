@@ -13,9 +13,9 @@ namespace H3MiniProjekt.DAL.Repositories
     {
         public Task<List<Author>> GetAllAuthors();
         public Task<Author> GetAuthorById(int AuthorId);
-        void CreateAuthor(Author author);
-        void DeleteAuthor(int authorId);
-        void UpdateAuthor(int autherId,Author author);
+        Task<Author> CreateAuthor(Author author);
+        Task<Author> DeleteAuthor(int authorId);
+        Task<Author> UpdateAuthor(int autherId,Author author);
     }
     public class AuthorRepository : IAuthorRepository
     {
@@ -27,14 +27,22 @@ namespace H3MiniProjekt.DAL.Repositories
         }
 
 
-        public void CreateAuthor(Author author)
+        public async Task<Author> CreateAuthor(Author author)
         {
-            throw new NotImplementedException();
+            _context.Author.Add(author);
+            await _context.SaveChangesAsync();
+            return author;
         }
 
-        public void DeleteAuthor(int authorId)
+        public async Task<Author> DeleteAuthor(int authorId)
         {
-            throw new NotImplementedException();
+            Author author = await _context.Author.FirstOrDefaultAsync(authorObj => authorObj.AuthorId == authorId);
+            if (author != null)
+            {
+                _context.Author.Remove(author);
+                await _context.SaveChangesAsync();
+            }
+            return author;
         }
 
         public async Task<List<Author>> GetAllAuthors()
@@ -47,9 +55,20 @@ namespace H3MiniProjekt.DAL.Repositories
             return await _context.Author.FirstOrDefaultAsync(Author => Author.AuthorId == AuthorId);
         }
 
-        public void UpdateAuthor(int autherId, Author author)
+        public async Task<Author> UpdateAuthor(int authorId, Author author)
         {
-            throw new NotImplementedException();
+            Author updateAuthor = await _context.Author.FirstOrDefaultAsync(authorObj => authorObj.AuthorId == authorId);
+
+            if (updateAuthor != null)
+            {
+                updateAuthor.Name = author.Name;
+                updateAuthor.Age = author.Age;
+                updateAuthor.Password = author.Password;
+                updateAuthor.IsAlive = author.IsAlive;
+                await _context.SaveChangesAsync();
+
+            }
+            return updateAuthor;
         }
     }
 }

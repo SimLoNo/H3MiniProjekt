@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace H3MiniProjekt.Api
@@ -29,6 +31,20 @@ namespace H3MiniProjekt.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("kage",
+                builder =>
+                {
+                    builder.AllowAnyOrigin() // kan skrive port i stedet for
+                           .AllowAnyHeader()
+                           .AllowAnyMethod(); // kun get eller put mm.
+                });
+            });
+
+            services.AddDbContext<AbContext>(
+                x => x.UseSqlServer(Configuration.GetConnectionString("Default")));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,6 +54,9 @@ namespace H3MiniProjekt.Api
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddDbContext<AbContext>();
+            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddControllers().AddJsonOptions(x =>
+            //x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +72,8 @@ namespace H3MiniProjekt.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("kage");
 
             app.UseAuthorization();
 
